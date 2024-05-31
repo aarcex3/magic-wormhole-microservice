@@ -1,6 +1,7 @@
-package main
+package routes
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -8,9 +9,21 @@ import (
 	"github.com/aarcex3/magic-wormhole-microservice/models"
 	"github.com/gin-gonic/gin"
 	"github.com/psanford/wormhole-william/wormhole"
+	qrcode "github.com/skip2/go-qrcode"
 )
 
 var client wormhole.Client
+
+func monitorSendStatus(status <-chan wormhole.SendResult) {
+	s := <-status
+	if s.Error != nil {
+		log.Printf("Send error: %s\n", s.Error)
+	} else if s.OK {
+		log.Println("Message sent successfully!")
+	} else {
+		log.Println("Send status not OK but no error reported.")
+	}
+}
 
 func SEND(c *gin.Context) {
 	var message models.Message
@@ -28,18 +41,18 @@ func SEND(c *gin.Context) {
 		return
 	}
 
-	go func() {
-		s := <-status
-		if s.Error != nil {
-			log.Printf("Send error: %s\n", s.Error)
-		} else if s.OK {
-			log.Println("OK!")
-		} else {
-			log.Println("Hmm not ok but also not error")
-		}
-	}()
+	go monitorSendStatus(status)
 
-	c.JSON(200, gin.H{"code": code})
+	content := fmt.Sprintf("wormhole-transfer:%s", code)
+
+	var png []byte
+	png, err = qrcode.Encode(content, qrcode.Medium, 256)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.Header("Content-Type", "image/jpeg")
+	c.Data(http.StatusOK, "image/png", png)
 }
 
 func RECIEVE(c *gin.Context) {
