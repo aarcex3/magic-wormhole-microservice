@@ -2,7 +2,11 @@ package utils
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"mime/multipart"
+	"os"
+	"strings"
 
 	"github.com/psanford/wormhole-william/wormhole"
 	qrcode "github.com/skip2/go-qrcode"
@@ -30,4 +34,13 @@ func GenerateQR(content string) []byte {
 
 func GenerateURL(code string) string {
 	return fmt.Sprintf("wormhole-transfer:%s", code)
+}
+
+func GetExtension(file *multipart.FileHeader) string {
+	return strings.Split(file.Filename, ".")[len(strings.Split(file.Filename, "."))-1]
+}
+
+func CreateTempFile(file io.Reader, extension string) (*os.File, error) {
+	pattern := fmt.Sprintf("upload-*.%s", extension)
+	return os.CreateTemp("./temp", pattern)
 }

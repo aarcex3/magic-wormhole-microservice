@@ -8,9 +8,9 @@ import (
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
-	router.GET("/", routes.HOME)
-	router.POST("/send", routes.SEND)
-	router.GET("/recieve", routes.RECIEVE)
-	router.GET("/health", routes.HEALTH)
-	router.Run()
+	router.GET("/", routes.Home)
+	router.POST("/send", routes.Send)
+	router.GET("/recieve", routes.Receive)
+	router.GET("/health", routes.Health)
+	router.Run(":8000")
 }
