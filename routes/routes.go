@@ -1,29 +1,17 @@
 package routes
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
 
 	"github.com/aarcex3/magic-wormhole-microservice/models"
+	"github.com/aarcex3/magic-wormhole-microservice/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/psanford/wormhole-william/wormhole"
-	qrcode "github.com/skip2/go-qrcode"
 )
 
 var client wormhole.Client
-
-func monitorSendStatus(status <-chan wormhole.SendResult) {
-	s := <-status
-	if s.Error != nil {
-		log.Printf("Send error: %s\n", s.Error)
-	} else if s.OK {
-		log.Println("Message sent successfully!")
-	} else {
-		log.Println("Send status not OK but no error reported.")
-	}
-}
 
 func SEND(c *gin.Context) {
 	var message models.Message
@@ -41,15 +29,10 @@ func SEND(c *gin.Context) {
 		return
 	}
 
-	go monitorSendStatus(status)
+	go utils.MonitorStatus(status)
 
-	content := fmt.Sprintf("wormhole-transfer:%s", code)
-
-	var png []byte
-	png, err = qrcode.Encode(content, qrcode.Medium, 256)
-	if err != nil {
-		log.Fatal(err)
-	}
+	content := utils.GenerateURL(code)
+	png := utils.GenerateQR(content)
 
 	c.Header("Content-Type", "image/jpeg")
 	c.Data(http.StatusOK, "image/png", png)
@@ -68,9 +51,7 @@ func RECIEVE(c *gin.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if msg.Type != wormhole.TransferText {
-		log.Fatalf("Expected a text message but got type %s", msg.Type)
-	}
+
 	msgBody, err := io.ReadAll(msg)
 	if err != nil {
 		log.Fatal(err)
@@ -79,10 +60,14 @@ func RECIEVE(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": string(msgBody)})
 }
 
-func INDEX(c *gin.Context) {
+func HOME(c *gin.Context) {
 
-	c.JSON(200, gin.H{
-		"message": "Running",
-	})
+	c.HTML(http.StatusOK, "index.html", nil)
+
+}
+
+func HEALTH(c *gin.Context) {
+
+	c.JSON(http.StatusOK, gin.H{"message": "Running"})
 
 }

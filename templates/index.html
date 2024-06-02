@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <title>Welcome</title>
+  </head>
+
+  <body class="hero is-fullheight">
+    <div class="hero-body" id="main">
+      <div class="container columns">
+        <div class="column is-three-quarters is-offset-one-fifth">
+          <form hx-post="/send" hx-trigger="submit">
+            <div class="file is-fullwidth is-boxed">
+              <label class="file-label">
+                <input class="file-input" type="file" name="file" />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label"> File to send </span>
+                </span>
+              </label>
+            </div>
+            <div class="control">
+              <button
+                hx-post="/send"
+                hx-target="#main"
+                hx-swap="innerHTML"
+                class="button"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
