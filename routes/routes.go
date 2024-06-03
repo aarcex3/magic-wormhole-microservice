@@ -85,7 +85,15 @@ func Receive(c *gin.Context) {
 }
 
 func Home(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", nil)
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"title": "Index",
+	})
+}
+
+func About(c *gin.Context) {
+	c.HTML(http.StatusOK, "about.html", gin.H{
+		"title": "About",
+	})
 }
 
 func Health(c *gin.Context) {
