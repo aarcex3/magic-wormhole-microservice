@@ -9,6 +9,7 @@ import (
 
 	"github.com/aarcex3/magic-wormhole-microservice/models"
 	"github.com/aarcex3/magic-wormhole-microservice/utils"
+	"github.com/aarcex3/magic-wormhole-microservice/views"
 	"github.com/gin-gonic/gin"
 	"github.com/psanford/wormhole-william/wormhole"
 )
@@ -85,15 +86,13 @@ func Receive(c *gin.Context) {
 }
 
 func Home(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "Index",
-	})
+	c.Status(200)
+	utils.Render(c, views.Index())
 }
 
 func About(c *gin.Context) {
-	c.HTML(http.StatusOK, "about.html", gin.H{
-		"title": "About",
-	})
+	c.Status(200)
+	utils.Render(c, views.About())
 }
 
 func Health(c *gin.Context) {

@@ -8,6 +8,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/a-h/templ"
+	"github.com/gin-gonic/gin"
 	"github.com/psanford/wormhole-william/wormhole"
 	qrcode "github.com/skip2/go-qrcode"
 )
@@ -43,4 +45,8 @@ func GetExtension(file *multipart.FileHeader) string {
 func CreateTempFile(file io.Reader, extension string) (*os.File, error) {
 	pattern := fmt.Sprintf("upload-*.%s", extension)
 	return os.CreateTemp("./temp", pattern)
+}
+
+func Render(c *gin.Context, template templ.Component) error {
+	return template.Render(c.Request.Context(), c.Writer)
 }

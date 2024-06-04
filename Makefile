@@ -6,8 +6,12 @@ BINARY=$(SRC_DIR)/main
 # Default target: build and run the application
 all: run
 
+# Generate code using templ
+generate:
+	templ generate
+
 # Build the binary
-build:
+build: generate
 	go build -o $(BINARY) $(SRC)
 
 # Run the application
@@ -19,4 +23,4 @@ clean:
 	rm -f $(BINARY)
 
 # Phony targets
-.PHONY: all build run clean
+.PHONY: all generate build run clean

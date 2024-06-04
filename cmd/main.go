@@ -7,7 +7,6 @@ import (
 
 func main() {
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*")
 	router.GET("/", routes.Home)
 	router.GET("/about", routes.About)
 	router.POST("/send", routes.Send)

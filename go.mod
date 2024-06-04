@@ -4,6 +4,8 @@ go 1.21.9
 
 require github.com/psanford/wormhole-william v1.0.7
 
+require github.com/a-h/templ v0.2.707 // indirect
+
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect

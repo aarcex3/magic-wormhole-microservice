@@ -1,0 +1,17 @@
+package views
+
+import (
+    "github.com/aarcex3/magic-wormhole-microservice/views/components"
+)
+
+
+templ Index() {
+    <html lang="en">
+        @components.Header()
+        <body id="main">
+            @components.Navbar()
+            @components.File()
+            @components.Footer()
+        </body>
+    </html>
+}
